@@ -1,0 +1,31 @@
+services:
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/prometheus/prometheus.yml
+      - ./prometheus-data:/prometheus
+    command:
+      - '--storage.tsdb.retention.time=7d'
+      - '--storage.tsdb.retention.size=512MB'
+    networks:
+      - monitoring-network
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    user: "${MY_UID}:${MY_GID}"
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./grafana-data:/var/lib/grafana
+    networks:
+      - monitoring-network
+    restart: unless-stopped
+
+networks:
+  monitoring-network:
+    driver: bridge
