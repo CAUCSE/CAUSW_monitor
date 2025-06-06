@@ -1,3 +1,12 @@
+# 인증서 (절대 커밋 금지!)
+nginx/data/
+!nginx/data/README.md
+
+# Certbot webroot 파일 (도메인 인증용 일시 파일)
+certbot/www/
+!certbot/www/README.md
+
+
 # 환경 변수 파일 (민감 정보)
 .env
 
@@ -10,7 +19,3 @@ grafana-data/
 
 # macOS 특유의 시스템 파일
 .DS_Store
-
-# 로그 및 임시 파일
-*.log
-*.tmp
