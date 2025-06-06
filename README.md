@@ -24,7 +24,7 @@ Spring Boot 애플리케이션을 모니터링하기 위한 경량 도커 기반
 ### 1. 프로젝트 클론
 
 ```
-$ git clone 
+$ git clone https://github.com/CAUCSE/CAUSW_monitor.git
 $ cd {모니터링 프로젝트 디렉토리}
 ````
 
@@ -90,7 +90,7 @@ $ ./restart.sh
 ### ✅ Grafana 접속 정보
 
 ```
-	•	URL: http://localhost:3000
+	•	URL: 13.209.181.162:3000
 	•	초기 로그인: admin / changeme123 (또는 .env에서 설정한 비밀번호)
 ```
 
