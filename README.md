@@ -4,7 +4,9 @@ Spring Boot 애플리케이션을 모니터링하기 위한 경량 도커 기반
 
 이 저장소는 Prometheus와 Grafana를 Docker Compose로 간단히 구성할 수 있도록 설계되었으며, .env와 템플릿을 활용한 환경 유연성을 제공합니다.
 
-⸻
+로키 alertmanager 등의 스펙이 추가 될 예정입니다.
+
+---
 
 ##  📦 구성 요소
 
@@ -38,7 +40,6 @@ cp .env.example .env
 
 | 항목             | 설명                                                                 |
 |------------------|----------------------------------------------------------------------|
-| `SPRING_TARGETS` | Prometheus가 모니터링할 Spring 서버들의 도메인 또는 IP 목록 (쉼표 구분) |
 | `MY_UID`         | 호스트 시스템의 UID. Grafana 컨테이너 파일 권한 문제를 방지하기 위해 사용 |
 | `MY_GID`         | 호스트 시스템의 GID. 위와 동일한 목적이며 함께 설정해야 함              |
 
@@ -53,40 +54,38 @@ id -g   # 사용자 GID 출력
 
 ---
 
-### 3. 실행
+### 3. prometheus.yml 작성
 
-chmod +x bootstrap.sh shutdown.sh
-./bootstrap.sh
+```
+cp prometheus.template.yml prometheus.yml
+```
 
-bootstrap.sh는 다음을 수행합니다:
-- 	.env를 읽어들임
-- prometheus.yml을 템플릿 기반으로 생성
-- docker-compose up -d 실행
+이후, prometheus.yml 을 직접 수정하여 초기 설정을 진행합니다.
+
+---
+
+### 4. 실행
+
+```
+$ docker compose up -d
+```
 
 ---
 
 ### 4. 종료 및 정리
 
 ```
-./shutdown.sh
+$ docker compose down
 ```
 
-shutdown.sh는 다음을 수행합니다:
-- Docker 컨테이너 중지 및 삭제
-- 자동 생성된 prometheus.yml 삭제
+### 재시작
 
----
+재시작의 경우 `restart.sh` 실행파일을 실행시켜주어도 됩니다.
 
-### ⚠️ 중요: docker-compose up/down 단독 사용 자제
-
-| 명령어               | 문제점                                      |
-|----------------------|---------------------------------------------|
-| `docker-compose up -d` | `prometheus.yml`을 갱신하지 않음              |
-| `docker-compose down`  | `prometheus.yml`은 그대로 남아있음 (삭제되지 않음) |
-
-🚫 따라서 반드시 bootstrap.sh와 shutdown.sh를 사용해야 최신 구성이 반영되고, 파일 상태가 깨지지 않습니다.
-
----
+```
+$ chmod +x restart.sh # restart.sh 파일 실행권한 부여 (권한 있을 시에는 실행하지 않아도 괜찮음)
+$ ./restart.sh
+```
 
 ### ✅ Grafana 접속 정보
 
