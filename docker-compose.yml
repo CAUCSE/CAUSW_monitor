@@ -2,6 +2,7 @@ services:
   prometheus:
     image: prom/prometheus:latest
     container_name: prometheus
+    user: "${MY_UID}:${MY_GID}"
     ports:
       - "9090:9090"
     volumes:
