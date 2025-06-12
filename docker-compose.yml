@@ -26,33 +26,23 @@ services:
       - GF_SERVER_DOMAIN=${DOMAIN}
       - GF_SERVER_ROOT_URL=https://${DOMAIN}
 
-  nginx:
-    image: nginx:latest
-    container_name: nginx
+  caddy:
+    image: caddy:latest
+    container_name: caddy
+    restart: unless-stopped
     ports:
       - "80:80"
       - "443:443"
     volumes:
-      - ./nginx/conf.d:/etc/nginx/conf.d
-      - ./certbot/www:/var/www/certbot
-      - ./nginx/data:/etc/letsencrypt
-    depends_on:
-      - grafana
-      - prometheus
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
     networks:
       - monitoring-network
-    restart: unless-stopped
 
-  certbot:
-    image: certbot/certbot
-    container_name: certbot
-    volumes:
-      - ./nginx/data:/etc/letsencrypt
-      - ./certbot/www:/var/www/certbot
-    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do sleep 12h & wait $${!}; certbot renew; done'"
-    networks:
-      - monitoring-network
-    restart: unless-stopped
+volumes:
+  caddy_data:
+  caddy_config:
 
 networks:
   monitoring-network:
