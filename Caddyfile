@@ -1,9 +1,0 @@
-13.209.181.162.nip.io {
-    handle_path /prometheus* {
-        respond 403
-    }
-
-    handle {
-        reverse_proxy grafana:3000
-    }
-}
